@@ -24,3 +24,11 @@ jobs:
         - name: Deploy to EC2 instance - ec2 서버로 배포
           run: |
             scp -o StrictHostKeyChecking=no -i ./wj-key.pem -r . ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}}:~/app
+
+        - name: EC2 환경 세팅 및 구동
+          run: |
+            ssh -i app/wj-key.pem -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << 'E0F'
+            cd ~/app
+            sudo apt update && sudo apt upgrade -y
+            sudo apt install python3-pip python3-venv -y
+            E0F
