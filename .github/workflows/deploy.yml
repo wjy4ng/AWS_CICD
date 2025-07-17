@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - name: Repoitory Checkout code, 소스 가져오기 
-        uses: actions/checkout@v4
+          uses: actions/checkout@v4
 
         # EC2에 접속하기 위해 pem파일을 깃허브 내 리눅스에 생성
         - name: Create SSH key file - pem 파일 생성
-        run: |
+          run: |
             echo "${{secrets.EC2_SSH_KEY}}" | base64 --decode > ./wj-key.pem
             chmod 600 ./wj-key.pem
+            ls -al
