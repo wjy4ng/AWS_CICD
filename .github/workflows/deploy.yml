@@ -19,6 +19,12 @@ jobs:
             chmod 600 ./wj-key.pem
             ls -al
         
+        - name: 뒷정리
+          run: |
+            ssh -i wj-key.pem -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << EOF
+              pkill -f "python3 app.py"
+            EOF
+
         # -o: 경고창 없이 바로 진입
         # -r: 디렉토리 전체 복사
         - name: Deploy to EC2 instance - ec2 서버로 배포
@@ -27,12 +33,12 @@ jobs:
 
         - name: EC2 환경 세팅 및 구동
           run: |
-            ssh -i app/wj-key.pem -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << 'E0F'
-            cd ~/app
-            sudo apt update && sudo apt upgrade -y
-            sudo apt install python3-pip python3-venv -y
-            python3 -m venv venv
-            source venv/bin/activate
-            pip3 install -r requirements.txt
-            nohup python3 app.py > app.log 2>&1 &
-            E0F
+            ssh -i wj-key.pem -o StrictHostKeyChecking=no ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}} << 'EOF'
+              cd ~/app
+              sudo apt update && sudo apt upgrade -y
+              sudo apt install python3-pip python3-venv -y
+              python3 -m venv venv
+              source venv/bin/activate
+              pip3 install -r requirements.txt
+              nohup python3 app.py > app.log 2>&1 &
+            EOF
