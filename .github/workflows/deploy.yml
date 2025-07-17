@@ -18,3 +18,9 @@ jobs:
             echo "${{secrets.EC2_KEY}}" | base64 --decode > ./wj-key.pem
             chmod 600 ./wj-key.pem
             ls -al
+        
+        # -o: 경고창 없이 바로 진입
+        # -r: 디렉토리 전체 복사
+        - name: Deploy to EC2 instance - ec2 서버로 배포
+          run: |
+            scp -o StrictHostKeyChecking=no -i ./wj-key.pem -r . ${{secrets.EC2_USER}}@${{secrets.EC2_HOST}}:~/app
